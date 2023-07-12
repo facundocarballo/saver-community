@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": "out",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/dapp/sinergyBronze/nft/**",
+        "destination": "/dapp/sinergyBronze/nft/[id]/index.html"
+      },
+      {
+        "source": "/dapp/sinergyBronze/buyNFT/**",
+        "destination": "/dapp/sinergyBronze/buyNFT/[id]/index.html"
+      }
+    ]
+  }
+}

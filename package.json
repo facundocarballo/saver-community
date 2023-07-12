@@ -1,0 +1,44 @@
+{
+  "name": "saver-1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "lint": "next lint",
+    "export": "next export"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.2",
+    "@chakra-ui/react": "^2.2.1",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "chart.js": "^3.9.1",
+    "clipboard": "^2.0.11",
+    "framer-motion": "^6.5.1",
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-confetti": "^6.1.0",
+    "react-dom": "18.1.0",
+    "react-p5": "^1.3.30",
+    "react-use-window-size": "^1.0.1",
+    "styled-components": "^5.3.5",
+    "web3": "^1.7.3",
+    "web3.storage": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.41",
+    "@types/react": "18.0.12",
+    "@types/react-dom": "18.0.5",
+    "eslint": "8.17.0",
+    "eslint-config-next": "12.1.6",
+    "typescript": "4.7.3"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/fonts/"
+    ]
+  }
+}
