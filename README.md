@@ -1,8 +1,11 @@
 # Saver Community
 
 Saver Community is a Decentralized Application deployed in the Moonbeam Blockchain, focused on increment the savings of his users (USDC and USDT).
+
 Basically you have to buy Able (the official ERC20 Token of this dapp) and hold it.
+
 Everytime that you buy Able, you are buying points too. These points are useful to achieve the daily requirements of the dapp.
+
 You will have to achieve some requirements daily. For example:
 - Increment your Points in 0.9%
 - Answer a Video Test
