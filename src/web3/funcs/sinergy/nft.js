@@ -1,8 +1,5 @@
-import NFT_IMAGES from '../../../nftImages.json';
 import { NFT_PRIVATE_IMAGES } from '../../../nftPrivateImages';
 import { INITIAL_AMOUNT_NFTS, unixToDate } from '..';
-import { IMG_NFT_TOKEN } from '../../../images';
-import { getActualTimestamp } from '../able/reward';
 
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 const BASE_URL_NFT_IMAGES = "https://ipfs.io/ipfs";
