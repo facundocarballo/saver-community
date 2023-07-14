@@ -1,13 +1,13 @@
-contract Test is Owners {
-    // Cycle
-    Clock Cycle = Clock(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    // User
-    User Qualification = User(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
+contract Test is Router {
     // Attributes
-    bool public is_sorted;
+    bool public play_list;
+    uint256 public play_list_first_video_id;
+    uint256 public play_list_last_video_id;
+    uint256 public cycle_start_play_list;
+    uint256 public cycle_close_play_list;
+
     uint256 public id;
+
     mapping(uint256 => string) public youtube_id;
     mapping(uint256 => string) public first_question;
     mapping(uint256 => string) public second_question;
@@ -24,7 +24,7 @@ contract Test is Owners {
     mapping(address => mapping(uint256 => bool)) public answer_of;
 
     // Events
-    event AnswerVideo(uint256 indexed date, bool res, address indexed wallet);
+    event Answer(uint256 indexed date, bool res, address indexed wallet);
 
     // Public Functions
     function UploadVideoAndFirstQuestion(
@@ -92,13 +92,17 @@ contract Test is Owners {
         third_fake_answer_2[id - 1] = _third_fake_answer_2;
     }
 
-    function answerVideo(
+    function AnswerVideo(
         string memory answer_1,
         string memory answer_2,
         string memory answer_3,
         uint256 _id
     ) public {
-        require(Qualification.is_updated(msg.sender, Cycle.cycle()), "You have to update first.");
+        uint256 cycle = Cycle.cycle();
+        require(
+            Qualification.is_updated(msg.sender, cycle),
+            "You have to update first."
+        );
 
         bool first = (keccak256(abi.encodePacked((answer_1))) ==
             keccak256(abi.encodePacked((first_real_answer[_id]))));
@@ -107,19 +111,44 @@ contract Test is Owners {
         bool third = (keccak256(abi.encodePacked((answer_3))) ==
             keccak256(abi.encodePacked((third_real_answer[_id]))));
 
-        answer_of[msg.sender][Cycle.cycle()] = first && second && third;
+        answer_of[msg.sender][cycle] = first && second && third;
 
-        emit AnswerVideo(block.timestamp, first && second && third, msg.sender);
+        Qualification.Update(msg.sender);
 
-        // TODO: Update Clock.
+        emit Answer(block.timestamp, first && second && third, msg.sender);
+    }
+
+    // Helpers
+    function IsOwner(address wallet) public view returns (bool) {
+        return Wallets.IsOwner(wallet);
     }
 
     // Set functions
-    function ChangeSorted() public {
+    function UsePlayList() public {
         require(
             IsOwner(msg.sender),
             "You are not qualified to change the sort of the videos."
         );
-        is_sorted = !is_sorted;
+        play_list = !play_list;
+        cycle_start_play_list = Cycle.cycle();
+        cycle_close_play_list =
+            cycle_start_play_list +
+            (play_list_last_video_id - play_list_first_video_id);
+    }
+
+    function SetFirstVideoOfPlayList(uint256 _id) public {
+        require(
+            IsOwner(msg.sender),
+            "Only owner can set the first video of the play list"
+        );
+        play_list_first_video_id = _id;
+    }
+
+    function SetLastVideoOfPlayList(uint256 _id) public {
+        require(
+            IsOwner(msg.sender),
+            "Only owner can set the last video of the play list"
+        );
+        play_list_last_video_id = _id;
     }
 }

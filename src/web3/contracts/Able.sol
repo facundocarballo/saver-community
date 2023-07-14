@@ -1,4 +1,4 @@
-contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
+contract ERC20 is Context, IERC20, IERC20Metadata, Router {
     // Migration Saver
     mapping(address => bool) public isRecover;
 
@@ -9,42 +9,10 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     string private _name;
     string private _symbol;
 
-    // Cycle
-    Clock Cycle = Clock(0xbc4E59AE11A28214f84FCc1c9B0535355D408BBf);
-
     // Able
-    uint256 public initial_supply = 369000000 * 10**18;
-    uint256 public develpoment_supply = 1845000 * 10**18;
-
-    // Contract Migration
-    ERC20Migration public AbleMigration =
-        ERC20Migration(0x0b85cCA1814eE40C6E83E3591F3819eC7e87d0A5); // April 2023
-
-    ERC20Migration public FirstAbleMigration =
-        ERC20Migration(0xB13D289830F6512dFf4C6ce97f121F29bD400E39); // November 2022
-    ERC20 public TripleMigration =
-        ERC20(0x38e43FCEEE68373e08a30714123010b8d841364d);
-
-    SinergyMigration ContractMigration =
-        SinergyMigration(0xEa063b5A744616a161272a013a626A1cBD80Ee1B);
-
-    // ERC721
-    ERC721 public SinergyBronze;
-    ERC721 public SinergySilver;
-    ERC721 public SinergyGold;
-
-    // Sell List
-    SinergySale public AbleSale;
-
-    // User
-    User public Qualification =
-        User(0xb48E4bbE89bD0276343726b0f8A162be1BCB411c);
-
-    // Reward
-    BaseReward public StablecoinReward =
-        BaseReward(0xB13D289830F6512dFf4C6ce97f121F29bD400E39);
-    ConfidenceReward public StablecoinConfidenceReward =
-        ConfidenceReward(0xB13D289830F6512dFf4C6ce97f121F29bD400E39);
+    uint256 public initial_supply = 369000000 * 10 ** 18;
+    uint256 public development_supply = 1845000 * 10 ** 18;
+    mapping(address => mapping(uint256 => bool)) public has_transfer;
 
     // Holders
     uint256 public total_holders;
@@ -61,9 +29,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     mapping(address => bool) public won_able_reward;
     mapping(address => uint256) public total_able_earned_of;
     mapping(address => uint256) public cycle_to_able_reward;
-    mapping(address => uint256) public stablecoin_earned_by_able_reward;
     uint256 public able_rewards_claimed;
-    uint256 public qualified_able_rewards_claimed;
+    uint256 public qualified_able_rewards_claimed; // Cantidad de premios able de cuentas calificadas actualmente
     uint256 public total_able_distributed;
     address[] public wallet_winners;
 
@@ -72,6 +39,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     uint256 public amount_of_wallets_with_points;
     mapping(address => uint256) public points_of;
     address public last_wallet_who_bought_able;
+    mapping(address => mapping(uint256 => bool))
+        public increase_points_in_cycle;
 
     // Qualified Points
     mapping(uint256 => uint256) public qualified_points_by_cycle;
@@ -112,35 +81,18 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     constructor(string memory name_, string memory symbol_) {
         _name = name_;
         _symbol = symbol_;
-
-        // Se mintea el 0.1% del totalSupply (369.000.000 ABLE)
-        _mint(community_wallet, initial_supply - develpoment_supply);
-        _mint(development_wallet, develpoment_supply);
-
-        is_holder[community_wallet] = true;
-        is_holder[development_wallet] = true;
-
-        total_holders = 2;
-        qualified_holders = 2;
-        total_qualified_wallets = 2;
     }
 
     // Recover Saver
-    function GetAbleToRecover(address wallet, ERC20Migration Able, bool triple) public view returns (uint256) {
-        bool was_active = Able.canReclaim(wallet);
-        uint256 _cycle = Able.cycle();
-        uint256 i;
-        uint256 default_amount = Able.balanceOf(wallet);
+    function GetAbleToRecover(
+        address wallet,
+        ERC20Migration _Able,
+        bool triple
+    ) public view returns (uint256) {
+        uint256 default_amount = _Able.balanceOf(wallet);
+
         if (triple) {
             default_amount += TripleMigration.balanceOf(wallet);
-        }
-
-        while (!was_active && i < 69) {
-            was_active = Able.qualifiedHistory(wallet, _cycle - i);
-            i++;
-        }
-        if (was_active) {
-            return (default_amount + Able.donationBalance(wallet));
         }
 
         return default_amount;
@@ -149,12 +101,11 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     function Migrate() public {
         require(!isRecover[msg.sender]);
 
-        if (AbleMigration.isRecover(msg.sender)) {
-            _MigrateAble(msg.sender, AbleMigration, false);
+        if (AprilAbleContract.isRecover(msg.sender)) {
+            _MigrateAble(msg.sender, AprilAbleContract, false);
         } else {
-            _MigrateAble(msg.sender, FirstAbleMigration, true);
+            _MigrateAble(msg.sender, NovemberAbleContract, true);
         }
-
     }
 
     // Points
@@ -172,6 +123,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
             msg.sender == address(AbleSale),
             "Only Sinergy Sale can increase points."
         );
+
+        uint256 cycle = Cycle.cycle();
 
         if (amount_spended > 0 && points_of[wallet] == 0) {
             amount_of_wallets_with_points++;
@@ -192,8 +145,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         points_of[wallet] += amount_spended;
         total_points += amount_spended;
 
-        Qualification.Update(wallet);
-
         if (Qualification.IsQualified(wallet)) {
             qualified_points += points_of[wallet];
             is_qualified[wallet] = true;
@@ -201,21 +152,21 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
             qualified_holders++;
             last_wallet_who_bought_able = msg.sender;
             if (amount_of_wins_able_reward_of[wallet] > 0) {
-                qualified_able_rewards_claimed -= amount_of_wins_able_reward_of[
+                qualified_able_rewards_claimed += amount_of_wins_able_reward_of[
                     wallet
                 ];
             }
         }
 
-        StablecoinReward.IncreaseReward(amount_spended / 3);
+        increase_points_in_cycle[wallet][cycle] = true;
 
         // Emit Event
-        emit Points(wallet, Cycle.cycle(), amount_spended, true);
+        emit Points(wallet, cycle, amount_spended, true);
     }
 
     function DecreasePoints(address wallet, uint256 amount) public {
         require(
-            _CanDecreasePoints(wallet),
+            _CanDecreasePoints(msg.sender, wallet),
             "You are not qualified to try to Decrease Points."
         );
         require(
@@ -243,8 +194,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         if (points_of[wallet] == 0 && amount != 0) {
             amount_of_wallets_with_points--;
         }
-
-        Qualification.Update(wallet);
 
         if (Qualification.IsQualified(wallet)) {
             qualified_points += points_of[wallet];
@@ -286,7 +235,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         );
         require(
             cycle_to_able_reward[msg.sender] < Cycle.cycle(),
-            "You have to wait 30 days to claim your Able."
+            "You have to wait more cycles to claim your Able."
         );
 
         // Emit events
@@ -311,7 +260,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         total_able_distributed += points_of[msg.sender];
         total_able_earned_of[msg.sender] += points_of[msg.sender];
 
-        stablecoin_earned_by_able_reward[msg.sender] = 0;
+        Qualification.ResetStablecoinEarnedOnAbleReward(msg.sender);
     }
 
     function CanClaimAble(address wallet) public view returns (bool) {
@@ -334,8 +283,6 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
                 ];
             }
         }
-
-        Qualification.Update(wallet);
 
         if (Qualification.IsQualified(wallet)) {
             qualified_points += points_of[wallet];
@@ -378,96 +325,16 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     }
 
     // Get Functions
-    function GetWalletWinnersLength() public view returns(uint256) {
+    function GetWalletWinnersLength() public view returns (uint256) {
         return wallet_winners.length;
     }
 
+    // Helpers
+    function IsOwner(address wallet) public view returns (bool) {
+        return Wallets.IsOwner(wallet);
+    }
+
     // Set Functions
-    function SetClock(address _address) public {
-        require(IsOwner(msg.sender), "Only owner can change Clock contract.");
-        Cycle = Clock(_address);
-    }
-
-    function SetAbleMigration(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change Able Migration contract."
-        );
-        AbleMigration = ERC20Migration(_address);
-    }
-
-    function SetTripleMigration(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change Triple Migration contract."
-        );
-        TripleMigration = ERC20(_address);
-    }
-
-    function SetSinergyMigration(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change Sinergy Migration contract."
-        );
-        ContractMigration = SinergyMigration(_address);
-    }
-
-    function SetSinergyBronze(address _sinergyBronze) public {
-        require(
-            msg.sender == development_wallet,
-            "You are not qualified to set Sinergy Bronze"
-        );
-
-        SinergyBronze = ERC721(_sinergyBronze);
-    }
-
-    function SetSinergySilver(address _sinergySilver) public {
-        require(
-            msg.sender == development_wallet,
-            "You are not qualified to set Sinergy Silver"
-        );
-
-        SinergySilver = ERC721(_sinergySilver);
-    }
-
-    function SetSinergyGold(address _sinergyGold) public {
-        require(
-            msg.sender == development_wallet,
-            "You are not qualified to set Sinergy Gold"
-        );
-
-        SinergyGold = ERC721(_sinergyGold);
-    }
-
-    function SetSinergySale(SinergySale _ableSale) public {
-        require(
-            msg.sender == development_wallet,
-            "You are not qualified to set Sinergy Sale"
-        );
-        AbleSale = _ableSale;
-    }
-
-    function SetUser(address _address) public {
-        require(IsOwner(msg.sender), "Only owner can change User contract.");
-        Qualification = User(_address);
-    }
-
-    function SetStablecoinReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change Stablecoin Reward contract."
-        );
-        StablecoinReward = BaseReward(_address);
-    }
-
-    function SetStablecoinConfidenceReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change Stablecoin Confidence Reward contract."
-        );
-        StablecoinConfidenceReward = ConfidenceReward(_address);
-    }
-
     function SetPersonalPurpose(string memory _str) public {
         personal_purpose[msg.sender] = _str;
     }
@@ -493,29 +360,28 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
     }
 
     // Private Functions
-    function _MigrateAble(address wallet, ERC20Migration Able, bool triple) private {
+    function _MigrateAble(
+        address wallet,
+        ERC20Migration _Able,
+        bool triple
+    ) private {
         uint256 last_points_of = points_of[wallet];
         // Recover Donation Balance
-        points_of[wallet] += Able.donationBalance(wallet);
+        points_of[wallet] += _Able.donationBalance(wallet);
         total_points += points_of[wallet];
 
         // Recover Purposes
-        personal_purpose[wallet] = Able.personalPurpose(
-            wallet
-        );
-        community_purpose[wallet] = Able.communityPurpose(
-            wallet
-        );
+        personal_purpose[wallet] = _Able.personalPurpose(wallet);
+        community_purpose[wallet] = _Able.communityPurpose(wallet);
 
         // Recover SAVF (Last Saver Fast)
-        _mint(wallet, GetAbleToRecover(wallet, Able, triple));
+        _mint(wallet, GetAbleToRecover(wallet, _Able, triple));
 
-        if (Able.balanceOf(wallet) > 0 && !is_holder[wallet]) {
+        if (_Able.balanceOf(wallet) > 0 && !is_holder[wallet]) {
             total_holders++;
             is_holder[wallet] = true;
         }
 
-        Qualification.Update(wallet);
         bool qualification_is_qualified = Qualification.IsQualified(wallet);
         // Recover Qualified Donation Balance
         if (qualification_is_qualified && !is_qualified[wallet]) {
@@ -534,9 +400,16 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         isRecover[wallet] = true;
     }
 
-    function _CanDecreasePoints(address wallet) private view returns (bool) {
-        if (wallet == address(this) || wallet == address(Qualification))
-            return true;
+    function _CanDecreasePoints(
+        address wallet,
+        address owner
+    ) private view returns (bool) {
+        if (
+            wallet == address(this) ||
+            wallet == address(Qualification) ||
+            wallet == address(StablecoinBaseReward) ||
+            wallet == owner
+        ) return true;
         return false;
     }
 
@@ -558,43 +431,32 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         return _totalSupply;
     }
 
-    function balanceOf(address account)
-        public
-        view
-        virtual
-        override
-        returns (uint256)
-    {
+    function balanceOf(
+        address account
+    ) public view virtual override returns (uint256) {
         return _balances[account];
     }
 
-    function transfer(address to, uint256 amount)
-        public
-        virtual
-        override
-        returns (bool)
-    {
+    function transfer(
+        address to,
+        uint256 amount
+    ) public virtual override returns (bool) {
         address owner = _msgSender();
         _transfer(owner, to, amount);
         return true;
     }
 
-    function allowance(address owner, address spender)
-        public
-        view
-        virtual
-        override
-        returns (uint256)
-    {
+    function allowance(
+        address owner,
+        address spender
+    ) public view virtual override returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 amount)
-        public
-        virtual
-        override
-        returns (bool)
-    {
+    function approve(
+        address spender,
+        uint256 amount
+    ) public virtual override returns (bool) {
         address owner = _msgSender();
         _approve(owner, spender, amount);
         return true;
@@ -611,21 +473,19 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         return true;
     }
 
-    function increaseAllowance(address spender, uint256 addedValue)
-        public
-        virtual
-        returns (bool)
-    {
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) public virtual returns (bool) {
         address owner = _msgSender();
         _approve(owner, spender, _allowances[owner][spender] + addedValue);
         return true;
     }
 
-    function decreaseAllowance(address spender, uint256 subtractedValue)
-        public
-        virtual
-        returns (bool)
-    {
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) public virtual returns (bool) {
         address owner = _msgSender();
         uint256 currentAllowance = _allowances[owner][spender];
         require(
@@ -670,7 +530,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         }
 
         if (to != address(AbleSale)) {
-            StablecoinConfidenceReward.SetAmountSoldInPeriod(from, amount);
+            has_transfer[from][Cycle.cycle()] = true;
         }
 
         emit Transfer(from, to, amount);
@@ -747,4 +607,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata, Owners {
         address to,
         uint256 amount
     ) internal virtual {}
+}
+
+contract AbleSaver is ERC20 {
+    constructor() ERC20("ABLE SAVER", "ABLE") {}
 }

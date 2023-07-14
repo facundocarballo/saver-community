@@ -7549,7 +7549,6 @@ contract Test is Router {
     }
 }
 
-// Modificado
 contract User is Router {
     uint256 public MIN_POINTS_TO_QUALIFY = 3 ether;
     uint256 public PERCENT_TO_INCREASE = 10090;

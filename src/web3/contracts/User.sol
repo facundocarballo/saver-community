@@ -1,50 +1,11 @@
-contract User is Owners {
-    // Cycles
-    Clock Cycle = Clock(0xbc4E59AE11A28214f84FCc1c9B0535355D408BBf);
-    mapping(address => uint256) public cycleToCheck;
-
-    // Able
-    ERC20 Able = ERC20(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    uint256 MIN_POINTS_TO_QUALIFY = 3 ether;
-    uint256 PERCENT_TO_INCREASE = 10090;
-    uint256 AMOUNT_TO_DIVIDE = 10000;
+contract User is Router {
+    uint256 public MIN_POINTS_TO_QUALIFY = 3 ether;
+    uint256 public PERCENT_TO_INCREASE = 10090;
+    uint256 public AMOUNT_TO_DIVIDE = 10000;
     mapping(address => mapping(uint256 => uint256)) public points_per_cycle;
+    mapping(address => uint256) public stablecoin_earned_on_able_reward;
 
-    // Video Test
-    Test Video = Test(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    // Sinergy Sale
-    SinergySale AbleSale =
-        SinergySale(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    // Rewards
-    BaseReward StablecoinValueReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    BaseReward AbleValueReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    BaseReward StablecoinConstancyReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    BaseReward AbleConstancyReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    BaseReward StablecoinConfidenceReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    BaseReward AbleConfidenceReward =
-        BaseReward(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-
-    // Sinergy
-    Sinergy public SinergyBronze;
-    Sinergy public SinergySilver;
-    Sinergy public SinergyGold;
-
-    // USDC
-    ERC20 USDC = ERC20(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    uint256 public USDC_DECIMALS = 6;
-
-    // USDT
-    ERC20 USDT = ERC20(0xc8895f6f85D870589C42fd6d531c855bddD27B0f);
-    uint256 public USDT_DECIMALS = 6;
+    mapping(address => uint256) public cycleToCheck;
 
     // User
     mapping(address => mapping(uint256 => bool)) public is_updated;
@@ -67,6 +28,10 @@ contract User is Owners {
     mapping(address => mapping(uint256 => bool)) public qualified_video; // Answer correctly the video
     mapping(address => mapping(uint256 => bool)) public qualified_history; // History of Qualification cycle by cycle
 
+    // Confidence Reward Data
+    mapping(address => bool) public is_staking;
+    uint256 public amount_of_staking_wallets;
+
     // Events
     event CloseCycle(
         address indexed wallet,
@@ -85,8 +50,7 @@ contract User is Owners {
     constructor() {}
 
     function IsQualified(address wallet) public view returns (bool) {
-        if (wallet == community_wallet || wallet == development_wallet)
-            return true;
+        if (IsOwner(wallet)) return true;
 
         uint256 cycle = Cycle.cycle();
 
@@ -113,15 +77,15 @@ contract User is Owners {
         bool silver = false;
         bool gold = false;
 
-        if (SinergyBronze != ERC721(address(0))) {
+        if (address(SinergyBronze) != address(0)) {
             bronze = SinergyBronze.balanceOf(wallet) > 0;
         }
 
-        if (SinergySilver != ERC721(address(0))) {
+        if (address(SinergySilver) != address(0)) {
             silver = SinergySilver.balanceOf(wallet) > 0;
         }
 
-        if (SinergyGold != ERC721(address(0))) {
+        if (address(SinergyGold) != address(0)) {
             gold = SinergyGold.balanceOf(wallet) > 0;
         }
 
@@ -144,11 +108,9 @@ contract User is Owners {
         return (Able.points_of(wallet) > MIN_POINTS_TO_QUALIFY);
     }
 
-    function IsQualifiedByIncreasePoints(address wallet)
-        public
-        view
-        returns (bool)
-    {
+    function IsQualifiedByIncreasePoints(
+        address wallet
+    ) public view returns (bool) {
         uint256 points = Able.points_of(wallet);
         if (points == 0) return false;
 
@@ -162,7 +124,12 @@ contract User is Owners {
     }
 
     function IsQualifiedByVideo(address wallet) public view returns (bool) {
-        return Video.answer_of(wallet, Cycle.cycle() - 1);
+        return VideoTest.answer_of(wallet, Cycle.cycle() - 1);
+    }
+
+    // Helpers
+    function IsOwner(address wallet) public view returns (bool) {
+        return Wallets.IsOwner(wallet);
     }
 
     // Update Functions
@@ -172,163 +139,55 @@ contract User is Owners {
         CheckDay(wallet);
         Able.CheckAbleReward(wallet);
         UpdateSinergy(wallet);
-
-        AbleSale.Update();
-
-        UpdateRewards();
-
+        UpdateRewards(wallet);
         is_updated[wallet][Cycle.cycle()] = true;
         emit UpdateEvent(block.timestamp, wallet);
     }
 
-    function UpdateRewards() public {
-        StablecoinConfidenceReward.Update();
-        StablecoinConstancyReward.Update();
-        StablecoinValueReward.Update();
-        AbleConfidenceReward.Update();
-        AbleConstancyReward.Update();
-        AbleValueReward.Update();
-    }
-
     function UpdateSinergy(address wallet) public {
-        if (SinergyBronze != ERC721(address(0))) {
+        if (address(SinergyBronze) != address(0)) {
             SinergyBronze.UpdateQualifiedNfts(wallet);
         }
 
-        if (SinergySilver != ERC721(address(0))) {
+        if (address(SinergySilver) != address(0)) {
             SinergySilver.UpdateQualifiedNfts(wallet);
         }
 
-        if (SinergyGold != ERC721(address(0))) {
+        if (address(SinergyGold) != address(0)) {
             SinergyGold.UpdateQualifiedNfts(wallet);
         }
     }
 
+    function UpdateRewards(address wallet) public {
+        StablecoinBaseReward.SetIsParticipateOnThisReward(wallet);
+
+        StablecoinValueReward.SetIsParticipateOnThisReward(wallet);
+        StablecoinConstancyReward.SetIsParticipateOnThisReward(wallet);
+        StablecoinConfidenceReward.SetIsParticipateOnThisReward(wallet);
+
+        AbleValueReward.SetIsParticipateOnThisReward(wallet);
+        AbleConstancyReward.SetIsParticipateOnThisReward(wallet);
+        AbleConfidenceReward.SetIsParticipateOnThisReward(wallet);
+    }
+
     // Set functions
-    function SetClock(address wallet) public {
+    function ResetStablecoinEarnedOnAbleReward(address wallet) public {
         require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the Clock."
+            msg.sender == address(Able),
+            "Only Able can reset stablecoin earned on Able reward."
         );
-        Cycle = Clock(wallet);
+        stablecoin_earned_on_able_reward[wallet] = 0;
     }
 
-    function SetAble(address _address) public {
+    function IncreaseStablecoinEarnedOnAbleReward(
+        address wallet,
+        uint256 amount
+    ) public {
         require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the Able contract."
+            msg.sender == address(StablecoinBaseReward),
+            "Only Stablecoin Base Reward contract can increase stablecoin earned on Able reward."
         );
-        Able = ERC20(_address);
-    }
-
-    function SetTest(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the Test contract."
-        );
-        Video = Test(_address);
-    }
-
-    function SetSinergySale(address sinergy_sale) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to set Sinergy Sale"
-        );
-        AbleSale = SinergySale(sinergy_sale);
-    }
-
-    function SetStablecoinValueReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Stablecoin Value Reward contract."
-        );
-
-        StablecoinValueReward = BaseReward(_address);
-    }
-
-    function SetAbleValueReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Able Value Reward contract."
-        );
-
-        AbleValueReward = BaseReward(_address);
-    }
-
-    function SetStablecoinConstancyReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Stablecoin Constancy Reward contract."
-        );
-
-        StablecoinConstancyReward = BaseReward(_address);
-    }
-
-    function SetAbleConsntancyReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Able Constancy Reward contract."
-        );
-
-        AbleConstancyReward = BaseReward(_address);
-    }
-
-    function SetStablecoinConfidenceReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Stablecoin Confidence Reward contract."
-        );
-
-        StablecoinConfidenceReward = BaseReward(_address);
-    }
-
-    function SetAbleConfidenceReward(address _address) public {
-        require(
-            IsOwner(msg.sender),
-            "Only owner can change the Able Confidence Reward contract."
-        );
-
-        AbleConfidenceReward = BaseReward(_address);
-    }
-
-    function SetSinergyBronze(address sinergy) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to set Sinergy Bronze"
-        );
-        SinergyBronze = Sinergy(sinergy);
-    }
-
-    function SetSinergySilver(address sinergy) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to set Sinergy Silver"
-        );
-        SinergySilver = Sinergy(sinergy);
-    }
-
-    function SetSinergyGold(address sinergy) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to set Sinergy Gold"
-        );
-        SinergyGold = Sinergy(sinergy);
-    }
-
-    function SetUSDC(address wallet) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the USDC."
-        );
-        USDC = ERC20(wallet);
-    }
-
-    function SetUSDT(address wallet) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the USDT."
-        );
-        USDT = ERC20(wallet);
+        stablecoin_earned_on_able_reward[wallet] += amount;
     }
 
     function SetPercentToIncrease(uint256 amount) public {
@@ -352,36 +211,23 @@ contract User is Owners {
         MIN_POINTS_TO_QUALIFY = amount;
     }
 
-    // Set Decimals
-    function SetUSDCDecimals(uint256 decimals) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the USDC Decimals."
-        );
-        USDC_DECIMALS = decimals;
-    }
-
-    function SetUSDTDecimals(uint256 decimals) public {
-        require(
-            IsOwner(msg.sender),
-            "You are not qualified to change the USDC Decimals."
-        );
-        USDT_DECIMALS = decimals;
-    }
-
     // Get functions
     function GetBalanceOfUSDC(address wallet) public view returns (uint256) {
+        uint256 USDC_DECIMALS = Wallets.USDC_DECIMALS();
+        uint256 balance = USDC.balanceOf(wallet);
         if (USDC_DECIMALS == 18) {
-            return USDC.balanceOf(wallet);
+            return balance;
         }
-        return USDC.balanceOf(wallet) * 10**(18 - USDC_DECIMALS);
+        return balance * 10 ** (18 - USDC_DECIMALS);
     }
 
     function GetBalanceOfUSDT(address wallet) public view returns (uint256) {
+        uint256 USDT_DECIMALS = Wallets.USDT_DECIMALS();
+        uint256 balance = USDT.balanceOf(wallet);
         if (USDT_DECIMALS == 18) {
-            return USDT.balanceOf(wallet);
+            return balance;
         }
-        return USDT.balanceOf(wallet) * 10**(18 - USDT_DECIMALS);
+        return balance * 10 ** (18 - USDT_DECIMALS);
     }
 
     function GetPointsToIncrease(uint256 amount) public view returns (uint256) {
@@ -410,6 +256,22 @@ contract User is Owners {
         qualified_video[wallet][cycle] = IsQualifiedByVideo(wallet);
         qualified_history[wallet][cycle] = IsQualified(wallet);
 
+        if (!qualified_history[wallet][cycle]) {
+            _ResetStablecoinEarnedOnAbleReward(wallet);
+        }
+
+        uint256 able_amount = Able.balanceOf(wallet);
+
+        if (is_staking[wallet]) {
+            is_staking[wallet] = false;
+            amount_of_staking_wallets--;
+        }
+
+        if (able_amount >= StablecoinConfidenceReward.MIN_AMOUNT_OF_ABLE()) {
+            is_staking[wallet] = true;
+            amount_of_staking_wallets++;
+        }
+
         emit CloseCycle(
             wallet,
             cycle,
@@ -421,5 +283,9 @@ contract User is Owners {
             qualified_increase_points[wallet][cycle],
             qualified_video[wallet][cycle]
         );
+    }
+
+    function _ResetStablecoinEarnedOnAbleReward(address wallet) private {
+        stablecoin_earned_on_able_reward[wallet] = 0;
     }
 }
