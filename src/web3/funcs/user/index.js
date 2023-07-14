@@ -8,6 +8,7 @@ export const UserGetData = async (User, cycle, wallet) => {
     const last_points_wei = await User.contract.methods.points_per_cycle(wallet, cycle - 1).call();
     const last_points = web3.utils.fromWei(last_points_wei, 'ether');
     const is_updated = await User.contract.methods.is_updated(wallet, cycle).call();
+    console.log("is_updated: ", is_updated)
     const is_qualified = await User.contract.methods.IsQualified(wallet).call();
     const stablecoin_earned_on_able_reward_wei = await User.contract.methods.stablecoin_earned_on_able_reward(wallet).call();
     const stablecoin_earned_on_able_reward = web3.utils.fromWei(stablecoin_earned_on_able_reward_wei, 'ether');

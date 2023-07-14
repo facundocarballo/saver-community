@@ -168,9 +168,6 @@ export const getSinergyBronzeData = async (
 
     window.document.getElementById('loading').innerHTML = "Cargando NFT Favorito...";
 
-    // TODO: Esta diferencia no debe existir.
-    // 25-01-2023 Probar si esto es lo que hacia que Miguel no pudiera entrar al admin
-
     favouriteNFT = await getNFT(
         ContractSinergy,
         favouriteNFT_ID,
@@ -181,7 +178,7 @@ export const getSinergyBronzeData = async (
 
     window.document.getElementById('loading').innerHTML = "Cargando Recompensas...";
     let start_time = Date.now();
-    const rewards = null;//await getRewardInfo(ContractSinergy, Rewards, addressAccount, favouriteNFT_ID);
+    const rewards = null;
     let end_time = Date.now();
     console.log("Tiempo de carga (Sinergy Rewards): ", ((end_time - start_time) / 1000).toString())
 
@@ -192,6 +189,12 @@ export const getSinergyBronzeData = async (
     const isRecover = await MigrationContract.methods.isRecover(addressAccount).call();
 
     const nfts_qualified = await ContractSinergy.methods.nfts_qualified().call();
+
+    const dai_price_wei = await ContractSinergy.methods.PRICE().call();
+    const able_price_wei = await ContractSinergy.methods.ABLE_PRICE().call();
+
+    const dai_price = web3.utils.fromWei(dai_price_wei, 'ether');
+    const able_price = web3.utils.fromWei(able_price_wei, 'ether');
 
     return {
         contract: ContractSinergy,
@@ -205,7 +208,9 @@ export const getSinergyBronzeData = async (
         myNFTs: myNFTs,
         favouriteNFT: favouriteNFT,
         haveToRecover: !isRecover,
-        nfts_qualified
+        nfts_qualified,
+        able_price,
+        dai_price
     };
 }
 

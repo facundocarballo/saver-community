@@ -126,7 +126,7 @@ export const BuyNFT = () => {
   };
 
   const handleApproveStablecoin = async () => {
-    const amountWEI = web3.utils.toWei("36", "ether");
+    const amountWEI = web3.utils.toWei(SinergyBronze.dai_price, "ether");
     const data = await StableCoin.contract.methods
       .approve(SINERGY_BRONZE_CONTRACT_ADDRESS, amountWEI)
       .encodeABI();
@@ -166,7 +166,7 @@ export const BuyNFT = () => {
   };
 
   const handleApproveABLE = async () => {
-    const amountWEI = web3.utils.toWei("12", "ether");
+    const amountWEI = web3.utils.toWei(SinergyBronze.able_price, "ether");
     const data = await Able.contract.methods
       .approve(SINERGY_BRONZE_CONTRACT_ADDRESS, amountWEI)
       .encodeABI();
@@ -336,15 +336,24 @@ export const BuyNFT = () => {
               {loading ? (
                 <Loading />
               ) : !approveABLE ? (
-                <Button
-                  variant="actionDapp"
-                  ref={cancelRef}
-                  onClick={handleApproveABLE}
-                  ml={3}
-                  isDisabled={Number(Able.balance) < 12}
-                >
-                  Aprobar 12 ABLE
-                </Button>
+                <>
+                  <Button
+                    variant="actionDapp"
+                    ref={cancelRef}
+                    onClick={handleApproveABLE}
+                    ml={3}
+                    isDisabled={
+                      Number(Able.balance) < Number(SinergyBronze.able_price)
+                    }
+                  >
+                    Aprobar {Number(SinergyBronze.able_price).toFixed(2)} ABLE
+                  </Button>
+                  {Number(Able.balance) < Number(SinergyBronze.able_price) ? (
+                    <Text color="red" fontSize="15px" fontWeight="bold">
+                      ABLE INSUFICIENTE
+                    </Text>
+                  ) : null}
+                </>
               ) : !approveBUSD ? (
                 <>
                   <Button
@@ -352,12 +361,17 @@ export const BuyNFT = () => {
                     ref={cancelRef}
                     onClick={handleApproveStablecoin}
                     ml={3}
-                    isDisabled={Number(StableCoin.balance) < 36}
+                    isDisabled={
+                      Number(StableCoin.balance) <
+                      Number(SinergyBronze.dai_price)
+                    }
                   >
-                    Aprobar 36 {MAIN_CURRENCY}
+                    Aprobar {Number(SinergyBronze.dai_price).toFixed(2)}{" "}
+                    {MAIN_CURRENCY}
                   </Button>
                   <Box w="10px" />
-                  {Number(StableCoin.balance) < 36 ? (
+                  {Number(StableCoin.balance) <
+                  Number(SinergyBronze.dai_price) ? (
                     <Text color="red" fontSize="15px" fontWeight="bold">
                       {MAIN_CURRENCY} INSUFICIENTE
                     </Text>

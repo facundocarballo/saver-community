@@ -253,6 +253,13 @@ export const SaverProvider = (props) => {
     const loadSinergyBronze = async () => {
         if (Able == null) {
             const basicData = await loadBasicData();
+
+            const user = await UserGetData(
+                basicData.User,
+                basicData.Clock.cycle,
+                basicData.addressAccount
+            );
+
             const able = await AbleGetData(
                 basicData.Able,
                 basicData.addressAccount,
@@ -269,6 +276,7 @@ export const SaverProvider = (props) => {
 
 
             setBasicData(basicData);
+            setUser(user);
             setSinergyBronze(data);
             setAble(able);
 
@@ -1093,7 +1101,7 @@ export const SaverProvider = (props) => {
             basic_data.Clock.cycle,
             3
         );
-        
+
 
         setBasicData(basic_data);
         setConfidenceReward(data);

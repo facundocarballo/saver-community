@@ -215,7 +215,7 @@ export default function BuyNFT_Affiliate() {
   };
 
   const handleApproveBUSD = async () => {
-    const amountWEI = web3.utils.toWei("36", "ether");
+    const amountWEI = web3.utils.toWei(SinergyBronze.dai_price, "ether");
     const data = await StableCoin.contract.methods
       .approve(SINERGY_BRONZE_CONTRACT_ADDRESS, amountWEI)
       .encodeABI();
@@ -289,7 +289,7 @@ export default function BuyNFT_Affiliate() {
   };
 
   const handleApproveABLE = async () => {
-    const amountWEI = web3.utils.toWei("12", "ether");
+    const amountWEI = web3.utils.toWei(SinergyBronze.able_price, "ether");
     const data = await Able.contract.methods
       .approve(SINERGY_BRONZE_CONTRACT_ADDRESS, amountWEI)
       .encodeABI();
@@ -487,12 +487,12 @@ export default function BuyNFT_Affiliate() {
                     ref={cancelRef}
                     onClick={handleApproveABLE}
                     ml={3}
-                    isDisabled={Number(Able.balance) < 12}
+                    isDisabled={Number(Able.balance) < Number(SinergyBronze.able_price)}
                   >
-                    Aprobar 12 ABLE
+                    Aprobar {Number(SinergyBronze.able_price).toFixed(2)} ABLE
                   </Button>
                   <Text color="red">
-                    {Number(Able.balance) < 12
+                    {Number(Able.balance) < Number(SinergyBronze.able_price)
                       ? `No tienes suficientes ABLE para adquirir un NFT | ${Number(
                           Able.balance
                         )}`
@@ -506,12 +506,12 @@ export default function BuyNFT_Affiliate() {
                     ref={cancelRef}
                     onClick={handleApproveBUSD}
                     ml={3}
-                    isDisabled={Number(StableCoin.balance) < 36}
+                    isDisabled={Number(StableCoin.balance) < Number(SinergyBronze.dai_price)}
                   >
-                    Aprobar 36 {MAIN_CURRENCY}
+                    Aprobar {Number(SinergyBronze.dai_price).toFixed(2)} {MAIN_CURRENCY}
                   </Button>
                   <Text color="red">
-                    {Number(StableCoin.balance) < 36
+                    {Number(StableCoin.balance) < Number(SinergyBronze.dai_price)
                       ? `No tienes suficientes ${MAIN_CURRENCY} para adquirir un NFT | ${Number(
                           StableCoin.balance
                         )}`

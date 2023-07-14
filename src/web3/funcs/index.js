@@ -28,7 +28,7 @@ import { getHolders, getLastStableCoinDistribute, getSaverMinted, getSaverPrice,
 import { GetRecoverState, getMigrationData } from './migration';
 import { ClockGetInfo } from './clock';
 
-export const URL_WEB = "https://saver-community-test-moonbeam.web.app";
+export const URL_WEB = "https://saver.community";
 
 
 export const BASE_URL_NFT_IMAGES = "https://ipfs.io/ipfs";
