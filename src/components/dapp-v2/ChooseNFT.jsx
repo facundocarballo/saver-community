@@ -128,7 +128,7 @@ export const ChooseNFT = () => {
     SinergyBronze.myNFTs.map(
       (nft, _) => (total += Number(nft.activeRewardsClaimed))
     );
-    return total;
+    return Number(total).toFixed(2);
   };
 
   // Component
@@ -232,7 +232,7 @@ export const ChooseNFT = () => {
                           </Button>
                           <Box w="70px" />
                           <Text color="white">
-                            {nft.activeRewardsClaimed} {MAIN_CURRENCY}
+                            {Number(nft.activeRewardsClaimed).toFixed(2)} {MAIN_CURRENCY}
                           </Text>
                           <Box w="10px" />
                         </HStack>
@@ -291,7 +291,7 @@ export const ChooseNFT = () => {
                           </Button>
                           <Box w="70px" />
                           <Text color="white">
-                            {nft.activeRewardsClaimed} {MAIN_CURRENCY}
+                            {Number(nft.activeRewardsClaimed).toFixed(2)} {MAIN_CURRENCY}
                           </Text>
                           <Box w="10px" />
                         </HStack>
