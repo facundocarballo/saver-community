@@ -1,5 +1,9 @@
 # Smart Contract - Confidence Reward
 
+[Moonbeam Scan - Contract - Stablecoin Reward](https://moonbeam.moonscan.io/address/0xe688784F840486d925B97936b8D1f70509916A07)
+
+[Moonbeam Scan - Contract - Able Reward](https://moonbeam.moonscan.io/address/0xEF29c67496Fac5A9D4E6c5cca67cAEDfed9005b6)
+
 ## How Confidence Reward works?
 This Contract inherits from the BaseReward Contract.
 
