@@ -10,5 +10,5 @@ You can participate in this reward applying this requirements:
 - Earn the Able Reward (at least once)
 - Have at least 21 accounts with an Able Reward earned in Saver Community.
 #### How much I will receive in this Reward?
-All the users in this reward will receive the same.
-> amount_to_claim = (1 * raised_amount ) / amount_of_users_participing
+The amount that you receive in this Reward it's depends on how much Able Reward you have earned in the game of Saver Community.
+> amount_to_claim = (your_amount_of_able_rewards_earned * raised_amount ) / total_amount_of_able_rewards_earned
