@@ -15,6 +15,15 @@ The Router have a reference for all the Smart Contract of this dapp. Each Smart 
 The Router is here to help the development process. If we need to change something in some Smart Contract, we can just deploy a new Smart Contract to the Blockchain and set the new Contract Address to the Router. With that, all the Smart Contract now are linked to the new Smart Contract too.
 
 ## Where is implemented?
+📁 Able.sol
+> This is the Smart Contract of Able.
+
+📁 Addresses.sol
+> This is the Smart Contract that the Router implementation has. (This is the contract that are in the Diagram upsthere as Router)
+
+📁 Clock.sol
+> This is the Smart Contract of the Dapp Clock. This Smart Contract set the pace of the dapp.
+
 📁 Migration
 > Here are all the Smart Contracts related to the Migration. Remember that Saver Community launches first in July of 2022, so now some users have to migrate to the new version.
 
@@ -24,35 +33,26 @@ The Router is here to help the development process. If we need to change somethi
 📁 Rewards
 > Here are all the Smart Contracts related to the Rewards in Saver Community. All the Rewards have the same structure, all inherits from the Smart Contract BaseReward.
 
-📄 Able.sol
-> This is the Smart Contract of Able.
+📁 Router.sol
+> This is a Smart Contract is inherit by all the other Smart Contracts of Saver Community. All the other contracts inherits this Smart Contract.
 
-📄 Addresses.sol
-> This is the Smart Contract that the Router implementation has. (This is the contract that are in the Diagram upsthere as Router)
+📁 SynergySale.sol
+> This Smart Contract handles the sale of Able in the Dapp.
 
-📄 Clock.sol
-> This is the Smart Contract of the Dapp Clock. This Smart Contract set the pace of the dapp.
+📁 Synergy.sol
+> This Smart Contract is responsible for the NFTs of Saver Community.
+
+📁 Test.sol
+> This Smart Contract handles the daily Test that the users have to answer it to qualify in the game.
+
+📁 User.sol
+> This Smart Contract handles the qualification of the user in the game.
 
 📄 Contracts.sol
 > This is the most important file. This file contains all the Smart Contracts integrated in only one file. This file was used to deploy all the Smart Contracts.
 
 📄 history.txt
 > This file saves a record of all the versions of Smart Contracts that we deployed to test until get this final version of Saver Community.
-
-📄 Router.sol
-> This is a Smart Contract is inherit by all the other Smart Contracts of Saver Community. All the other contracts inherits this Smart Contract.
-
-📄 SynergySale.sol
-> This Smart Contract handles the sale of Able in the Dapp.
-
-📄 Synergy.sol
-> This Smart Contract is responsible for the NFTs of Saver Community.
-
-📄 Test.sol
-> This Smart Contract handles the daily Test that the users have to answer it to qualify in the game.
-
-📄 User.sol
-> This Smart Contract handles the qualification of the user in the game.
 
 ## Guide to Deploy all the Smart Contracts.
 1. Deploy the Addresses Contract.
