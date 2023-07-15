@@ -22,7 +22,7 @@ const Home = () => {
     setStableCoinDistributed,
     setLastStableCoinDistribute,
     setSaverPrice,
-    setSaverMinted
+    setSaverMinted,
   } = useProvider();
 
   // React useEffect
