@@ -1,11 +1,11 @@
-# Smart Contract - Base Reward
+# Smart Contract - Value Reward
 
-## How Confidence Reward works?
+## How Value Reward works?
 This Contract inherits from the BaseReward Contract.
 
-### Confidence Reward - Synergy
+### Value Reward - Synergy
 #### How I can participate in this Reward?
 You can participate in this reward only qualifying in the game of Saver Community.
 #### How much I will receive in this Reward?
-All the users in this reward will receive the same.
-> amount_to_claim = (1 * raised_amount ) / amount_of_users_participing
+The amount that you receive in this Reward it's depends on how much NFTs you have in the game of Saver Community.
+> amount_to_claim = (your_amount_of_nfts * raised_amount ) / total_nfts_participing
