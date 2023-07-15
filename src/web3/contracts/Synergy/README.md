@@ -1,5 +1,7 @@
 # Smart Contracts - Synergy
 
+[Moonbeam Scan - Contract](https://moonbeam.moonscan.io/address/0xe519E164cd1F8D3474289fF4e52C16699EC9ea17)
+
 ## How Synergy works?
 Synergy is the Contract who handles the NFTs of Saver Community. This NFTs works like a tree, each NFT is connected with other NFT.
 This Contract allows the users to buy new NFTs in Saver Community for a price, initially the price is set on 36 DAI and 12 ABLE, but the admins of Saver Community can modify the price when they wants.
