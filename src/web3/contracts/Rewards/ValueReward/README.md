@@ -1,5 +1,10 @@
 # Smart Contract - Value Reward
 
+[Moonbeam Scan - Contract - Stablecoin Reward](https://moonbeam.moonscan.io/address/0xd3D4A95d6A6b2a78eEEAB47E82A5F37917EE04b2)
+
+[Moonbeam Scan - Contract - Able Reward](https://moonbeam.moonscan.io/address/0x2E98E76EEc7C69e9bbf87857fd099Ee851D4e5c4)
+
+
 ## How Value Reward works?
 This Contract inherits from the BaseReward Contract.
 
