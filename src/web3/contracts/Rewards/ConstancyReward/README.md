@@ -1,5 +1,9 @@
 # Smart Contract - Constancy Reward
 
+[Moonbeam Scan - Contract - Stablecoin Reward](https://moonbeam.moonscan.io/address/0x767C3E921272F4F4648435A47C4fF09cb4f3c87f)
+
+[Moonbeam Scan - Contract - Able Reward](https://moonbeam.moonscan.io/address/0x0cc78F063F8f4EDEbD174c69bDD7EE0fAaa6BFEb)
+
 ## How Constancy Reward works?
 This Contract inherits from the BaseReward Contract.
 
