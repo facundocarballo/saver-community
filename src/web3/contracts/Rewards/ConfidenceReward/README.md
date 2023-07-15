@@ -1,4 +1,4 @@
-# Smart Contract - Base Reward
+# Smart Contract - Confidence Reward
 
 ## How Confidence Reward works?
 This Contract inherits from the BaseReward Contract.
