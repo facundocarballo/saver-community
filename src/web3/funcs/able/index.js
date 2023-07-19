@@ -219,6 +219,9 @@ export const AbleGetData = async (Able, wallet, cycle) => {
     const points = await AbleGetPointsInfo(Able.contract, wallet, cycle);
     const management_info = await Able.contract.methods.management_info().call();
     const POTENCIAL_ABLE = await Able.contract.methods.POTENCIAL_ABLE().call();
+    const has_transfer = await Able.contract.methods.has_transfer(wallet, cycle - 1).call();
+    const able_rewards_claimed = await Able.contract.methods.able_rewards_claimed().call();
+    const amount_of_wins_able_reward_of = await Able.contract.methods.amount_of_wins_able_reward_of(wallet).call();
 
     Able.is_recover = is_recover;
     Able.holders = holders;
@@ -227,6 +230,9 @@ export const AbleGetData = async (Able, wallet, cycle) => {
     Able.points = points;
     Able.management_info = management_info;
     Able.POTENCIAL_ABLE = POTENCIAL_ABLE;
+    Able.has_transfer = has_transfer;
+    Able.able_rewards_claimed = able_rewards_claimed;
+    Able.amount_of_wins_able_reward_of = amount_of_wins_able_reward_of;
 
     let end_time = Date.now();
     console.log("Tiempo de carga (Able): ", ((end_time - start_time) / 1000).toString())

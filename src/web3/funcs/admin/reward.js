@@ -87,8 +87,8 @@ const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet) => {
     const promise_stablecoin_stadistic_data = AdminGetStadisticData(Reward.stablecoin.contract, MAIN_CURRENCY, cycle);
     const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
     const promise_stablecoin_AMOUNT_USERS_NEED_TO_CLAIM = AdminConstancyChangeAMOUNT_USERS_NEED_TO_CLAIM(
-        Reward.stablecoin.contract, 
-        wallet, 
+        Reward.stablecoin.contract,
+        wallet,
         Reward.stablecoin.address
     );
 
@@ -96,8 +96,8 @@ const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet) => {
     const promise_able_stadistic_data = AdminGetStadisticData(Reward.able.contract, "ABLE", cycle);
     const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address);
     const promise_able_AMOUNT_USERS_NEED_TO_CLAIM = AdminConstancyChangeAMOUNT_USERS_NEED_TO_CLAIM(
-        Reward.able.contract, 
-        wallet, 
+        Reward.able.contract,
+        wallet,
         Reward.able.address
     );
 
@@ -129,7 +129,7 @@ const GetAdminConfidenceRewardInfo = async (Reward, cycle, wallet) => {
     const promise_stablecoin_stadistic_data = AdminGetStadisticData(Reward.stablecoin.contract, MAIN_CURRENCY, cycle);
     const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
     const promise_stablecoin_MIN_AMOUNT_OF_ABLE = AdminConfidenceGetMIN_AMOUNT_OF_ABLE(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
-    
+
     // Able
     const promise_able_stadistic_data = AdminGetStadisticData(Reward.able.contract, "ABLE", cycle);
     const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address);
@@ -154,6 +154,9 @@ const GetAdminConfidenceRewardInfo = async (Reward, cycle, wallet) => {
         stadistic_data: able_stadistic_data,
         set_data: able_set_data
     }
+
+    console.log(Reward.stablecoin.admin);
+    console.log(Reward.able.admin);
 
     return Reward;
 };
@@ -266,7 +269,7 @@ const AdminConfidenceGetMIN_AMOUNT_OF_ABLE = async (Contract, wallet, ContractAd
     const value = Number(web3.utils.fromWei(actual_value, 'ether')).toFixed(2);
     const obj = {
         title: "Minima cantidad de Able para participar del bote",
-        value: value,
+        actual_value: value,
         func: handler,
         params: true
     }

@@ -165,6 +165,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "MigrationSinergy",
+				"outputs": [
+					{
+						"internalType": "contract Migration",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "POTENCIAL",
 				"outputs": [
 					{
@@ -250,6 +263,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "SinergyBronze",
+				"outputs": [
+					{
+						"internalType": "contract Sinergy",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "Stablecoin",
 				"outputs": [
 					{
@@ -324,6 +350,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "WithdrawAllFunds",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -533,7 +566,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/AbleSaver/v11-migration/Contracts.sol": "ConfidenceReward"
+			"contracts/AbleSaver/v12-migration/Contracts.sol": "ConfidenceReward"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -547,12 +580,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/AbleSaver/v11-migration/Contracts.sol": {
-			"keccak256": "0xadabdce26dda057c5990391934c098a44d478cfd1bc0c4d8cbc44b8ab76379ea",
+		"contracts/AbleSaver/v12-migration/Contracts.sol": {
+			"keccak256": "0xdd05e4c636526cb8f4a15f5a8bcdad4a4fa128178ce0e79cbc84984bcdd9beb8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://77690cca70b9fe4ef8462297407aae7cf85ddad6b38afc6f4751285ff3b2aca8",
-				"dweb:/ipfs/QmZ1GstxXVMqX36vnv96r9UNz4TeGFWXVdwWrJ6NUsDeRx"
+				"bzz-raw://b643beca5543568503c8fd26e830df934ea567844beec6209b5d7edbcb614713",
+				"dweb:/ipfs/Qma2Z8V25yVr3YEDEvMwLvqZHK4dVFp1LNfngzr44obFNU"
 			]
 		}
 	},

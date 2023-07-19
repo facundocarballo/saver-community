@@ -425,19 +425,125 @@ export const SinergyReward = ({ props }) => {
   };
 
   const isDisabledStablecoin = () => {
-    if (props.idx == VALUE_REWARD) return !ValueReward.stablecoin.can_claim;
+    if (props.idx == VALUE_REWARD)
+      return (
+        !ValueReward.stablecoin.can_claim ||
+        !ValueReward.stablecoin.is_participate_on_this_reward
+      );
     if (props.idx == CONSTANCY_REWARD)
-      return !ConstancyReward.stablecoin.can_claim;
+      return (
+        !ConstancyReward.stablecoin.can_claim ||
+        !ConstancyReward.stablecoin.is_participate_on_this_reward
+      );
     if (props.idx == CONFIDENCE_REWARD)
-      return !ConfidenceReward.stablecoin.can_claim;
+      return (
+        !ConfidenceReward.stablecoin.can_claim ||
+        !ConfidenceReward.stablecoin.is_participate_on_this_reward
+      );
     return true;
   };
 
   const isDisabledAble = () => {
-    if (props.idx == VALUE_REWARD) return !ValueReward.able.can_claim;
-    if (props.idx == CONSTANCY_REWARD) return !ConstancyReward.able.can_claim;
-    if (props.idx == CONFIDENCE_REWARD) return !ConfidenceReward.able.can_claim;
+    if (props.idx == VALUE_REWARD)
+      return (
+        !ValueReward.able.can_claim ||
+        !ValueReward.able.is_participate_on_this_reward
+      );
+    if (props.idx == CONSTANCY_REWARD)
+      return (
+        !ConstancyReward.able.can_claim ||
+        !ConstancyReward.able.is_participate_on_this_reward
+      );
+    if (props.idx == CONFIDENCE_REWARD)
+      return (
+        !ConfidenceReward.able.can_claim ||
+        !ConfidenceReward.able.is_participate_on_this_reward
+      );
     return true;
+  };
+
+  const WhyIsNotQualifiedValue = () => {
+    if (!ValueReward.stablecoin.is_participate_on_this_reward) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          No has participado de este bote.
+        </Text>
+      );
+    }
+  };
+
+  const WhyIsNotQualifiedConstancy = () => {
+    if (Number(Able.amount_of_wins_able_reward_of) < 1) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          Todavia no has recibido el Premio Able.
+        </Text>
+      );
+    }
+    if (
+      Number(ConstancyReward.min_users_to_claim) <
+      Number(Able.able_rewards_claimed)
+    ) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          Todavia no hay suficientes usuarios que hayan conseguido el Premio
+          Able.
+        </Text>
+      );
+    }
+    if (!ConstancyReward.stablecoin.is_participate_on_this_reward) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          No has participado de este bote.
+        </Text>
+      );
+    }
+  };
+
+  const WhyIsNotQualifiedConfidence = () => {
+    if (Number(Able.balance) < Number(ConfidenceReward.min_amount_able)) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          No tienes los suficientes Able para participar del bote de la
+          confianza.
+        </Text>
+      );
+    }
+    if (Able.has_transfer) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          El ciclo anterior has transferido Able.
+        </Text>
+      );
+    }
+    if (!ConfidenceReward.stablecoin.is_participate_on_this_reward) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          No has participado de este bote.
+        </Text>
+      );
+    }
+  };
+
+  const GetWhyIsNotQualified = () => {
+    if (!User.is_qualified) {
+      return (
+        <Text fontWeight="bold" color="red.400">
+          El ciclo anterior lo cerraste descalificado
+        </Text>
+      );
+    }
+
+    switch (props.idx) {
+      case VALUE_REWARD:
+        return WhyIsNotQualifiedValue();
+      case CONSTANCY_REWARD:
+        return WhyIsNotQualifiedConstancy();
+      case CONFIDENCE_REWARD:
+        return WhyIsNotQualifiedConfidence();
+      default:
+        break;
+    }
   };
 
   // Component
@@ -563,7 +669,7 @@ export const SinergyReward = ({ props }) => {
 
       <VStack>
         <HStack w="full">
-          <Box w='20px' />
+          <Box w="20px" />
           <Text fontWeight="bold" color="blue.300" fontSize="25px">
             {props.title}
           </Text>
@@ -573,7 +679,7 @@ export const SinergyReward = ({ props }) => {
           </Button>
         </HStack>
         <Box h="10px" />
-        
+
         <Image src={IMG_TOROID} alt="toroid" boxSize="150px" zIndex={10} />
 
         <VStack position="absolute" zIndex={10}>
@@ -627,22 +733,7 @@ export const SinergyReward = ({ props }) => {
           </HStack>
         )}
 
-        {/* <HStack w="full">
-          <Spacer />
-          <Button onClick={() => setShowInfo(true)} variant="blueDapp">
-            <InfoIcon />
-          </Button>
-        </HStack> */}
-
-        {!User.is_qualified ? (
-          <Text fontWeight="bold" color="red.400">
-            El ciclo anterior lo cerraste descalificado
-          </Text>
-        ) : (
-          <Text fontWeight="bold" color="black">
-            El ciclo anterior lo cerraste descalificado
-          </Text>
-        )}
+        {GetWhyIsNotQualified()}
       </VStack>
     </>
   );

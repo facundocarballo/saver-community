@@ -941,6 +941,9 @@ export const SaverProvider = (props) => {
         const min_amount_able = Number(web3.utils.fromWei(min_amount_able_wei, 'ether')).toFixed(2);
         confidence.min_amount_able = min_amount_able;
 
+        const min_users_to_claim = await ConstancyReward.stablecoin.contract.methods.AMOUNT_USERS_NEED_TO_CLAIM().call();
+        constancy.min_users_to_claim = min_users_to_claim; 
+
         setClock(clock);
         setValueReward(value);
         setConstancyReward(constancy);

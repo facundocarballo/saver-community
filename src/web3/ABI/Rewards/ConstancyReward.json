@@ -49,32 +49,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "Able",
-				"outputs": [
-					{
-						"internalType": "contract ERC20",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "AbleSale",
-				"outputs": [
-					{
-						"internalType": "contract SinergySale",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -140,19 +114,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "Cycle",
-				"outputs": [
-					{
-						"internalType": "contract Clock",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "GetTotalAmount",
 				"outputs": [
 					{
@@ -186,19 +147,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "IncreaseReward",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "wallet",
 						"type": "address"
@@ -217,10 +165,10 @@
 			},
 			{
 				"inputs": [],
-				"name": "Owner",
+				"name": "MigrationSinergy",
 				"outputs": [
 					{
-						"internalType": "contract Owners",
+						"internalType": "contract Migration",
 						"name": "",
 						"type": "address"
 					}
@@ -243,15 +191,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "Qualification",
-				"outputs": [
-					{
-						"internalType": "contract User",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
+				"name": "RefreshContracts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -262,7 +204,7 @@
 						"type": "address"
 					}
 				],
-				"name": "SetAble",
+				"name": "SetAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -288,7 +230,7 @@
 						"type": "address"
 					}
 				],
-				"name": "SetClock",
+				"name": "SetIsParticipateOnThisReward",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -310,33 +252,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "wallet",
-						"type": "address"
-					}
-				],
-				"name": "SetSinergy",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "wallet",
-						"type": "address"
-					}
-				],
-				"name": "SetSinergySale",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "wallet",
+						"name": "token",
 						"type": "address"
 					}
 				],
@@ -346,21 +262,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "wallet",
-						"type": "address"
-					}
-				],
-				"name": "SetUser",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
-				"name": "SinergyContract",
+				"name": "SinergyBronze",
 				"outputs": [
 					{
 						"internalType": "contract Sinergy",
@@ -373,7 +276,46 @@
 			},
 			{
 				"inputs": [],
+				"name": "Stablecoin",
+				"outputs": [
+					{
+						"internalType": "contract ERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "Token",
+				"outputs": [
+					{
+						"internalType": "contract ERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "USDC",
+				"outputs": [
+					{
+						"internalType": "contract ERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "USDT",
 				"outputs": [
 					{
 						"internalType": "contract ERC20",
@@ -408,6 +350,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "WithdrawAllFunds",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -449,6 +398,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "contracts_id",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -462,6 +424,30 @@
 					}
 				],
 				"name": "has_claimed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "is_participate_on_this_reward",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -492,8 +478,70 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "total_amount_on_this_reward",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "total_distributed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "total_wallets_on_this_reward",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "user_amount_on_this_reward",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -518,7 +566,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/AbleSaver/v11-migration/Contracts.sol": "ConstancyReward"
+			"contracts/AbleSaver/v12-migration/Contracts.sol": "ConstancyReward"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -532,12 +580,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/AbleSaver/v11-migration/Contracts.sol": {
-			"keccak256": "0x4909e5ecc7e7f929d90dd35ee0fd1da256b87830e85c641c1f712b01b07103aa",
+		"contracts/AbleSaver/v12-migration/Contracts.sol": {
+			"keccak256": "0xdd05e4c636526cb8f4a15f5a8bcdad4a4fa128178ce0e79cbc84984bcdd9beb8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5aa071e4966456c693407b88d06f361887f806a095ac22afe8dcd8813b9b2ef1",
-				"dweb:/ipfs/QmU7UvqrLwVaELAYNCYNhZykf37htYJCKxYzkYW8c8xkwc"
+				"bzz-raw://b643beca5543568503c8fd26e830df934ea567844beec6209b5d7edbcb614713",
+				"dweb:/ipfs/Qma2Z8V25yVr3YEDEvMwLvqZHK4dVFp1LNfngzr44obFNU"
 			]
 		}
 	},
