@@ -324,7 +324,7 @@ export const SinergyBronzeCard = ({ nft, owner }) => {
 
   const canSellAble = () => {
     if (nft.selling != undefined) {
-      if (nft.selling.able > 0) return false;
+      if (Number(nft.selling.able) > 0) return false;
       return nft.selling.can_selling_by_time;
     }
     return false;
@@ -343,6 +343,38 @@ export const SinergyBronzeCard = ({ nft, owner }) => {
       return true;
     }
     return false;
+  };
+
+  const WhyICantPostAbleToSell = () => {
+    if (!User.is_qualified) {
+      return <Text color="red.400">Tu cuenta esta descalificada.</Text>;
+    }
+
+    if (Number(AbleSale.min_amount_able_to_sell) > Number(Able.balance)) {
+      return (
+        <Text color="red.400">
+          Tienes solo {Able.balance} ABLE y necesitas tener minimo{" "}
+          {AbleSale.min_amount_able_to_sell} ABLE para poder publicarlos en la
+          Lista de Ventas.
+        </Text>
+      );
+    }
+
+    if (!nft.selling.can_selling_by_time) {
+      return (
+        <Text color="red.400">
+          Ya has publicado Able a la venta con otro NFT de esta billetera.
+        </Text>
+      );
+    }
+
+    if (nft.selling != undefined && Number(nft.selling.able) > 0) {
+      return (
+        <Text color="red.400">
+          Este NFT ya tiene publicado Able a la venta.
+        </Text>
+      );
+    }
   };
 
   const isYouTubeLink = (str) => String(str).includes(YOUTUBE_BASIC_URL);
@@ -462,14 +494,8 @@ export const SinergyBronzeCard = ({ nft, owner }) => {
                       Puedes publicar desde {AbleSale.MIN_AMOUNT_SELL_TOKEN}{" "}
                       ABLE hasta {AbleSale.MAX_AMOUNT_SELL_TOKEN} ABLE.
                     </Text>
-                  ) : !User.is_qualified ? (
-                    <Text color="red.400">Tu cuenta esta descalificada.</Text>
                   ) : (
-                    <Text color="red.400">
-                      Tienes solo {Able.balance} ABLE y necesitas tener minimo{" "}
-                      {AbleSale.min_amount_able_to_sell} ABLE para poder
-                      publicarlos en la Lista de Ventas.
-                    </Text>
+                    WhyICantPostAbleToSell()
                   )
                 ) : null}
                 {!sellAble ? (
