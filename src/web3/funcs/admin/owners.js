@@ -40,6 +40,7 @@ const AdminGetSetData = async (Contract, wallet) => {
     const USDC_DECIMALS = await AdminGetUsdcDecimals(Contract, wallet);
     const USDT = await AdminGetUsdt(Contract, wallet);
     const USDT_DECIMALS = await AdminGetUsdtDecimals(Contract, wallet);
+    const Stablecoin = await AdminGetStablecoin(Contract, wallet);
 
     const data = [
         community_wallet,
@@ -47,7 +48,8 @@ const AdminGetSetData = async (Contract, wallet) => {
         USDC,
         USDC_DECIMALS,
         USDT,
-        USDT_DECIMALS
+        USDT_DECIMALS,
+        Stablecoin
     ]
 
     let end_time = Date.now();
@@ -164,6 +166,26 @@ const AdminGetUsdtDecimals = async (Contract, wallet) => {
     const actual_value = await Contract.methods.USDT_DECIMALS().call();
     const obj = {
         title: "Decimales del token USDT",
+        actual_value: actual_value,
+        params: true,
+        func: handler
+    }
+
+    return obj;
+};
+
+// Stablecoin
+const AdminGetStablecoin = async (Contract, wallet) => {
+    const handler = async (value) => {
+        const data = await Contract.methods.SetStablecoin(value).encodeABI();
+        const params = await buildTransaciont(wallet, OWNERS_CONTRACT_ADDRESS, data);
+        
+        return params;
+    };
+
+    const actual_value = await Contract.methods.Stablecoin().call();
+    const obj = {
+        title: "Stablecoin",
         actual_value: actual_value,
         params: true,
         func: handler
