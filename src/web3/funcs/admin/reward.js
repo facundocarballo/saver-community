@@ -10,23 +10,26 @@ export const AdminGetRewardInfo = async (
     Reward,
     wallet,
     cycle,
-    idx
+    idx,
+    StablecoinContract,
+    AbleContract
 ) => {
+    console.log("aca ->", StablecoinContract);
     let start_time = Date.now();
     window.document.getElementById('loading').innerHTML = "Cargando Reward...";
     let promise_reward = null;
     switch (idx) {
         case BASE_REWARD_IDX:
-            promise_reward = GetAdminBaseRewardInfo(Reward, cycle, wallet);
+            promise_reward = GetAdminBaseRewardInfo(Reward, cycle, wallet, StablecoinContract, AbleContract);
             break;
         case VALUE_REWARD_IDX:
-            promise_reward = GetAdminValueRewardInfo(Reward, cycle, wallet);
+            promise_reward = GetAdminValueRewardInfo(Reward, cycle, wallet, StablecoinContract, AbleContract);
             break;
         case CONSTANCY_REWARD_IDX:
-            promise_reward = GetAdminConstancyRewardInfo(Reward, cycle, wallet);
+            promise_reward = GetAdminConstancyRewardInfo(Reward, cycle, wallet, StablecoinContract, AbleContract);
             break;
         case CONFIDENCE_REWARD_IDX:
-            promise_reward = GetAdminConfidenceRewardInfo(Reward, cycle, wallet);
+            promise_reward = GetAdminConfidenceRewardInfo(Reward, cycle, wallet, StablecoinContract, AbleContract);
             break;
         default:
             break;
@@ -40,9 +43,9 @@ export const AdminGetRewardInfo = async (
     return Reward;
 };
 
-const GetAdminBaseRewardInfo = async (Reward, cycle, wallet) => {
+const GetAdminBaseRewardInfo = async (Reward, cycle, wallet, StablecoinContract) => {
     const promise_stadistic_data = AdminGetStadisticData(Reward.contract, MAIN_CURRENCY, cycle);
-    const promise_set_data = AdminGetSetData(Reward.contract, wallet, Reward.address);
+    const promise_set_data = AdminGetSetData(Reward.contract, wallet, Reward.address, StablecoinContract);
 
     const stadistic_data = await promise_stadistic_data;
     const set_data = await promise_set_data;
@@ -55,14 +58,21 @@ const GetAdminBaseRewardInfo = async (Reward, cycle, wallet) => {
     return Reward;
 };
 
-const GetAdminValueRewardInfo = async (Reward, cycle, wallet) => {
+const GetAdminValueRewardInfo = async (
+    Reward,
+    cycle,
+    wallet,
+    StablecoinContract,
+    AbleContract
+) => {
+
     // Stablecoin
     const promise_stablecoin_stadistic_data = AdminGetStadisticData(Reward.stablecoin.contract, MAIN_CURRENCY, cycle);
-    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
+    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address, StablecoinContract);
 
     // Able
     const promise_able_stadistic_data = AdminGetStadisticData(Reward.able.contract, "ABLE", cycle);
-    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address);
+    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address, AbleContract);
 
     const stablecoin_stadistic_data = await promise_stablecoin_stadistic_data;
     const stablecoin_set_data = await promise_stablecoin_set_data;
@@ -82,10 +92,10 @@ const GetAdminValueRewardInfo = async (Reward, cycle, wallet) => {
     return Reward;
 };
 
-const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet) => {
+const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet, StablecoinContract, AbleContract) => {
     // Stablecoin
     const promise_stablecoin_stadistic_data = AdminGetStadisticData(Reward.stablecoin.contract, MAIN_CURRENCY, cycle);
-    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
+    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address, StablecoinContract);
     const promise_stablecoin_AMOUNT_USERS_NEED_TO_CLAIM = AdminConstancyChangeAMOUNT_USERS_NEED_TO_CLAIM(
         Reward.stablecoin.contract,
         wallet,
@@ -94,7 +104,7 @@ const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet) => {
 
     // Able
     const promise_able_stadistic_data = AdminGetStadisticData(Reward.able.contract, "ABLE", cycle);
-    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address);
+    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address, AbleContract);
     const promise_able_AMOUNT_USERS_NEED_TO_CLAIM = AdminConstancyChangeAMOUNT_USERS_NEED_TO_CLAIM(
         Reward.able.contract,
         wallet,
@@ -124,15 +134,15 @@ const GetAdminConstancyRewardInfo = async (Reward, cycle, wallet) => {
     return Reward;
 };
 
-const GetAdminConfidenceRewardInfo = async (Reward, cycle, wallet) => {
+const GetAdminConfidenceRewardInfo = async (Reward, cycle, wallet, StablecoinContract, AbleContract) => {
     // Stablecoin
     const promise_stablecoin_stadistic_data = AdminGetStadisticData(Reward.stablecoin.contract, MAIN_CURRENCY, cycle);
-    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
+    const promise_stablecoin_set_data = AdminGetSetData(Reward.stablecoin.contract, wallet, Reward.stablecoin.address, StablecoinContract);
     const promise_stablecoin_MIN_AMOUNT_OF_ABLE = AdminConfidenceGetMIN_AMOUNT_OF_ABLE(Reward.stablecoin.contract, wallet, Reward.stablecoin.address);
 
     // Able
     const promise_able_stadistic_data = AdminGetStadisticData(Reward.able.contract, "ABLE", cycle);
-    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address);
+    const promise_able_set_data = AdminGetSetData(Reward.able.contract, wallet, Reward.able.address, AbleContract);
     const promise_able_MIN_AMOUNT_OF_ABLE = AdminConfidenceGetMIN_AMOUNT_OF_ABLE(Reward.able.contract, wallet, Reward.able.address);
 
     const stablecoin_stadistic_data = await promise_stablecoin_stadistic_data;
@@ -202,14 +212,21 @@ const AdminGetStadisticData = async (Contract, symbol, cycle) => {
     return data;
 };
 
-const AdminGetSetData = async (Contract, wallet, ContractAddress) => {
+const AdminGetSetData = async (Contract, wallet, ContractAddress, ERC20Contract) => {
     let start_time = Date.now();
     window.document.getElementById('loading').innerHTML = "Cargando Datos Modificables de Reward...";
 
     const token = await AdminGetToken(Contract, wallet, ContractAddress);
+    const WithdrawAllFunds = await AdminClaimAllStablecoin(
+        Contract,
+        wallet,
+        ContractAddress,
+        ERC20Contract
+    );
 
     const data = [
-        token
+        token,
+        WithdrawAllFunds
     ]
 
     let end_time = Date.now();
@@ -276,3 +293,24 @@ const AdminConfidenceGetMIN_AMOUNT_OF_ABLE = async (Contract, wallet, ContractAd
 
     return obj;
 };
+
+const AdminClaimAllStablecoin = async (Contract, wallet, ContractAddress, ERC20Contract) => {
+    const handler = async () => {
+        const data = await Contract.methods.WithdrawAllFunds().encodeABI();
+        const params = await buildTransaciont(wallet, ContractAddress, data);
+
+        return params;
+    };
+
+    const actual_value_wei = await ERC20Contract.methods.balanceOf(ContractAddress).call();
+    const actual_value = Number(web3.utils.fromWei(actual_value_wei, 'ether')).toFixed(2);
+
+    const obj = {
+        title: "Retirar todos los fondos",
+        actual_value: actual_value,
+        params: false,
+        func: handler
+    }
+
+    return obj;
+}

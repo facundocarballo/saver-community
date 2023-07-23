@@ -942,7 +942,7 @@ export const SaverProvider = (props) => {
         confidence.min_amount_able = min_amount_able;
 
         const min_users_to_claim = await ConstancyReward.stablecoin.contract.methods.AMOUNT_USERS_NEED_TO_CLAIM().call();
-        constancy.min_users_to_claim = min_users_to_claim; 
+        constancy.min_users_to_claim = min_users_to_claim;
 
         setClock(clock);
         setValueReward(value);
@@ -1072,7 +1072,9 @@ export const SaverProvider = (props) => {
             basic_data.Rewards.value,
             basic_data.addressAccount,
             basic_data.Clock.cycle,
-            1
+            1,
+            basic_data.Stablecoin.contract,
+            basic_data.Able.contract
         );
 
         setBasicData(basic_data);
@@ -1087,7 +1089,9 @@ export const SaverProvider = (props) => {
             basic_data.Rewards.constancy,
             basic_data.addressAccount,
             basic_data.Clock.cycle,
-            2
+            2,
+            basic_data.Stablecoin.contract,
+            basic_data.Able.contract
         );
 
         setBasicData(basic_data);
@@ -1102,7 +1106,9 @@ export const SaverProvider = (props) => {
             basic_data.Rewards.confidence,
             basic_data.addressAccount,
             basic_data.Clock.cycle,
-            3
+            3,
+            basic_data.Stablecoin.contract,
+            basic_data.Able.contract
         );
 
 
@@ -1118,7 +1124,9 @@ export const SaverProvider = (props) => {
             basic_data.Rewards.daily.stablecoin,
             basic_data.addressAccount,
             basic_data.Clock.cycle,
-            0
+            0,
+            basic_data.Stablecoin.contract,
+            basic_data.Able.contract
         );
 
         setBasicData(basic_data);
