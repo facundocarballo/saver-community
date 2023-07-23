@@ -3,7 +3,7 @@ contract SinergySale is Router {
     uint256 public MAX_AMOUNT_SELL_TOKEN = 90 ether;
     uint256 public MIN_AMOUNT_SELL_TOKEN = 9 ether;
     uint256 public MIN_AMOUNT_TOKENS_TO_SELL;
-    uint256 public TOKEN_PRICE = 3; // 1 TOKEN = 3 STABLECOIN
+    uint256 public TOKEN_PRICE = 3; // 1 Able = 3 Stablecoin
     uint256 public LIMIT_POST_BY_CYCLE = 1;
     uint256 public PENALIZATION_PLACES = 3;
     uint256 public LIMIT_POST_BY_WALLET = 9;
@@ -12,11 +12,6 @@ contract SinergySale is Router {
     bool public need_be_qualified_to_sell;
     uint256 public TOTAL_TOKENS_SOLD;
     mapping(uint256 => uint256) public tokens_sold_by_cycle;
-
-    // ERC20 Contracts
-    ERC20 public ABLE;
-    ERC20 public TOKEN;
-    ERC20 public STABLECOIN;
 
     // Sell List
     uint256[] public sell_list;
@@ -63,11 +58,7 @@ contract SinergySale is Router {
     event SwapList(uint256 indexed nft_id);
 
     // Constructor
-    constructor(ERC20 _able, ERC20 _busd, ERC20 _token) {
-        ABLE = _able;
-        TOKEN = _token;
-        STABLECOIN = _busd;
-    }
+    constructor() {}
 
     // Migrate Functions
     function Migrate_Send_Sell_List(
@@ -136,7 +127,7 @@ contract SinergySale is Router {
             );
         }
 
-        TOKEN.transferFrom(msg.sender, address(this), _amount);
+        Able.transferFrom(msg.sender, address(this), _amount);
 
         selling_amount_of[_tokenID] += _amount;
         total_selling_amount += _amount;
@@ -160,8 +151,8 @@ contract SinergySale is Router {
             "Sinergy Sale doesn't have enought Able to sell that amount."
         );
 
-        // Transferimos los STABLECOIN a este contrato
-        STABLECOIN.transferFrom(
+        // Transferimos los Stablecoin a este contrato
+        Stablecoin.transferFrom(
             msg.sender,
             address(this),
             _amount * TOKEN_PRICE
@@ -171,19 +162,19 @@ contract SinergySale is Router {
         // Esto se hace en la funcion _SellAbleFromList
 
         // Transferimos 33% para el Admin
-        STABLECOIN.transfer(
+        Stablecoin.transfer(
             Wallets.managment_wallet(),
             ((_amount * TOKEN_PRICE) / 3)
         );
 
         // Transferimos 33% para el Bote del Regalo Diario de Able
-        STABLECOIN.transfer(
+        Stablecoin.transfer(
             address(StablecoinBaseReward),
             ((_amount * TOKEN_PRICE) / 3)
         );
 
-        // Transferimos los TOKEN al usuario
-        TOKEN.transfer(msg.sender, _amount);
+        // Transferimos los Able al usuario
+        Able.transfer(msg.sender, _amount);
 
         // Buscamos los vendedores
         uint256 nfts_to_remove_sell;
@@ -203,9 +194,9 @@ contract SinergySale is Router {
             _RemoveFirstNftFromDrivenList();
         }
 
-        // Aumentamos el BDD de esta billetera en ABLE
+        // Aumentamos el BDD de esta billetera en Able
         if (incrementBDD)
-            ABLE.IncreasePoints(_amount * TOKEN_PRICE, msg.sender);
+            Able.IncreasePoints(_amount * TOKEN_PRICE, msg.sender);
 
         // Aumentamos la cantidad de tokens vendidos.
         TOTAL_TOKENS_SOLD += _amount;
@@ -240,12 +231,12 @@ contract SinergySale is Router {
             "The amount that you are selling is greater than all the other sells. :("
         );
 
-        TOKEN.transfer(msg.sender, selling_amount_of[tokenID]);
+        Able.transfer(msg.sender, selling_amount_of[tokenID]);
         // Descontamos el monto que se saca de la venta
         total_selling_amount -= selling_amount_of[tokenID];
         selling_amount_of[tokenID] = 0;
 
-        // Sacamos al NFT de la Lista de Venta TOKEN
+        // Sacamos al NFT de la Lista de Venta Able
         if (is_in_sell_list[tokenID]) {
             _RemoveNftFromSellList(_GetIndexOfNftFromSellList(tokenID));
         } else {
@@ -394,8 +385,8 @@ contract SinergySale is Router {
     // Driven Helpers
     function CanBeInDrivenList(address wallet) public view returns (bool) {
         return
-            ABLE.won_able_reward(wallet) &&
-            ABLE.amount_of_wins_able_reward_of(wallet) >
+            Able.won_able_reward(wallet) &&
+            Able.amount_of_wins_able_reward_of(wallet) >
             turns_in_driven_list_of[wallet];
     }
 
@@ -526,7 +517,7 @@ contract SinergySale is Router {
         total_selling_amount -= _amount;
 
         // 33% van directo al usuario
-        STABLECOIN.transfer(owner, ((_amount * TOKEN_PRICE) / 3));
+        Stablecoin.transfer(owner, ((_amount * TOKEN_PRICE) / 3));
         amount_sold_of[owner] += ((_amount * TOKEN_PRICE) / 3);
 
         emit SellToken(_tokenID, buyer, owner, _amount);
@@ -543,11 +534,11 @@ contract SinergySale is Router {
         total_selling_amount -= _amount;
 
         // 16.5% van directo al usuario
-        STABLECOIN.transfer(owner, ((_amount * TOKEN_PRICE) / 6));
+        Stablecoin.transfer(owner, ((_amount * TOKEN_PRICE) / 6));
         amount_sold_of[owner] += ((_amount * TOKEN_PRICE) / 6);
 
         // 16.5% van directo al regalo diario de Able
-        STABLECOIN.transfer(
+        Stablecoin.transfer(
             address(StablecoinBaseReward),
             ((_amount * TOKEN_PRICE) / 6)
         );
