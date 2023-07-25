@@ -1752,6 +1752,7 @@ contract Addresses {
             "Only community wallet can change the community wallet"
         );
         community_wallet = wallet;
+        contracts_id++;
     }
 
     function SetDevelopmentWallet(address wallet) public {
@@ -1759,6 +1760,7 @@ contract Addresses {
             msg.sender == development_wallet,
             "Only development wallet can change the community wallet"
         );
+        contracts_id++;
         development_wallet = wallet;
     }
 
@@ -1768,6 +1770,7 @@ contract Addresses {
             "Only management wallet can change the community wallet"
         );
         managment_wallet = wallet;
+        contracts_id++;
     }
 
     function SetClock(address wallet) public {
@@ -1952,6 +1955,7 @@ contract Addresses {
             IsOwner(msg.sender),
             "Only owner can modify AprilMigrationSinergy"
         );
+        contracts_id++;
         AprilMigrationSinergy = Migration(wallet);
     }
 
@@ -1975,16 +1979,19 @@ contract Addresses {
 
     function SetStablecoin(address wallet) public {
         require(IsOwner(msg.sender), "Only owners can set stablecoin.");
+        contracts_id++;
         Stablecoin = ERC20(wallet);
     }
 
     function SetUSDC(address wallet) public {
         require(IsOwner(msg.sender), "Only owners can set USDC.");
+        contracts_id++;
         USDC = ERC20(wallet);
     }
 
     function SetUSDT(address wallet) public {
         require(IsOwner(msg.sender), "Only owners can set USDT.");
+        contracts_id++;
         USDT = ERC20(wallet);
     }
 
@@ -1994,6 +2001,7 @@ contract Addresses {
             IsOwner(msg.sender),
             "You are not qualified to change the USDC Decimals."
         );
+        contracts_id++;
         USDC_DECIMALS = decimals;
     }
 
@@ -2002,6 +2010,7 @@ contract Addresses {
             IsOwner(msg.sender),
             "You are not qualified to change the USDC Decimals."
         );
+        contracts_id++;
         USDT_DECIMALS = decimals;
     }
 }

@@ -41,6 +41,7 @@ const AdminGetSetData = async (Contract, wallet) => {
     const USDT = await AdminGetUsdt(Contract, wallet);
     const USDT_DECIMALS = await AdminGetUsdtDecimals(Contract, wallet);
     const Stablecoin = await AdminGetStablecoin(Contract, wallet);
+    const RefreshAll = await AdminGetRefreshAll(Contract, wallet);
 
     const data = [
         community_wallet,
@@ -49,7 +50,8 @@ const AdminGetSetData = async (Contract, wallet) => {
         USDC_DECIMALS,
         USDT,
         USDT_DECIMALS,
-        Stablecoin
+        Stablecoin,
+        RefreshAll
     ]
 
     let end_time = Date.now();
@@ -188,6 +190,25 @@ const AdminGetStablecoin = async (Contract, wallet) => {
         title: "Stablecoin",
         actual_value: actual_value,
         params: true,
+        func: handler
+    }
+
+    return obj;
+};
+
+// Refresh All
+const AdminGetRefreshAll = async (Contract, wallet) => {
+    const handler = async () => {
+        const data = await Contract.methods.RefreshAll().encodeABI();
+        const params = await buildTransaciont(wallet, OWNERS_CONTRACT_ADDRESS, data);
+        
+        return params;
+    };
+
+    const obj = {
+        title: "Refrescar todos los contratos",
+        actual_value: "",
+        params: false,
         func: handler
     }
 
