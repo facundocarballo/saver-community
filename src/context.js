@@ -163,7 +163,7 @@ export const SaverProvider = (props) => {
         setClock(data.Clock);
         setUser(data.User);
         setMigrationSinergyBronze(data.MigrationSinergyBronze);
-        setMigrationFirstSinergyBronze(data.MigrationFirstSinergyBronze);
+        setMigrationFirstSinergyBronze(data.MigrationSinergyBronze);
         setValueReward(data.Rewards.value);
         setConstancyReward(data.Rewards.constancy);
         setConfidenceReward(data.Rewards.confidence);
