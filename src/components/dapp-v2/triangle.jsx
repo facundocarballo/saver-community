@@ -24,6 +24,7 @@ import {
   IMG_CIRCLE_ZEN,
   IMG_FIRE,
   IMG_FIRE_BLUE,
+  IMG_GLMR,
   IMG_USDC_TOKEN,
   IMG_USDT_TOKEN,
 } from "../../images";
@@ -74,14 +75,14 @@ export const Triangle = () => {
 
   const usdc = {
     image: IMG_USDC_TOKEN,
-    symbol: "USDC",
+    symbol: "whUSDC",
     amount: Number(USDC.balance),
     firstAmount: User.saving.records.usdcRecord[0],
   };
 
   const usdt = {
-    image: IMG_USDT_TOKEN,
-    symbol: "USDT",
+    image: IMG_GLMR,
+    symbol: "WGLMR",
     amount: Number(USDT.balance),
     firstAmount: 0,
   };
