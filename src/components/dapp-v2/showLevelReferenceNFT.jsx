@@ -175,47 +175,47 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
     switch (level) {
       case "Primera":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverFirstLevelReferences(nft.id)
+          .RecoverFirstLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Segunda":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverSecondLevelReferences(nft.id)
+          .RecoverSecondLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Tercera":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverThirdLevelReferences(nft.id)
+          .RecoverThirdLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Cuarta":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverFourLevelReferences(nft.id)
+          .RecoverFourLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Quinta":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverFiveLevelReferences(nft.id)
+          .RecoverFiveLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Sexta":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverSixLevelReferences(nft.id)
+          .RecoverSixLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Septima":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverSevenLevelReferences(nft.id)
+          .RecoverSevenLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Octava":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverEightLevelReferences(nft.id)
+          .RecoverEightLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Novena":
         data = await MigrationFirstSinergyBronze.methods
-          .recoverNineLevelReferences(nft.id)
+          .RecoverNineLevelReferences(nft.id)
           .encodeABI();
         return data;
     }
