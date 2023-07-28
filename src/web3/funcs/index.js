@@ -346,7 +346,7 @@ export const loadBasicData = async () => {
     window.document.getElementById('loading').innerHTML = "Cargando ERC20s...";
 
     const promise_usdc = getERC20Info(Usdc.contract, addressAccount, 'mwei', USDC_CONTRACT_ADDRESS);
-    const promise_usdt = getERC20Info(Usdt.contract, addressAccount, 'mwei', USDT_CONTRACT_ADDRESS);
+    const promise_usdt = getERC20Info(Usdt.contract, addressAccount, 'ether', USDT_CONTRACT_ADDRESS);
     const promise_stablecoin = getERC20Info(Stablecoin.contract, addressAccount, 'ether', STABLE_COIN_CONTRACT_ADDRESS);
 
     window.document.getElementById('loading').innerHTML = "Cargando GLMR...";
