@@ -41,8 +41,6 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
     MigrationFirstSinergyBronze
   } = useProvider();
 
-  console.log("MigrationFirstSinergyBronze: ", MigrationFirstSinergyBronze);
-
   // Methods
   const getNFTsAtLevel = () => {
     if (level == "Primera") {
@@ -172,49 +170,50 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
 
   const getCorrectDataOfRecoverNFTs = async () => {
     let data = null;
+    const Contract = MigrationFirstSinergyBronze.contract;
     switch (level) {
       case "Primera":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverFirstLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Segunda":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverSecondLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Tercera":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverThirdLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Cuarta":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverFourLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Quinta":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverFiveLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Sexta":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverSixLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Septima":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverSevenLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Octava":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverEightLevelReferences(nft.id)
           .encodeABI();
         return data;
       case "Novena":
-        data = await MigrationFirstSinergyBronze.methods
+        data = await Contract.methods
           .RecoverNineLevelReferences(nft.id)
           .encodeABI();
         return data;
@@ -331,7 +330,7 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
               </Text>
               {loading ? (
                 <Loading />
-              ) : showRecoverLevel() ? (
+              ) : true ? (
                 <Button variant="blueDapp" onClick={handleRecoverNFTsByLevel}>
                   Migrar NFTs
                 </Button>
