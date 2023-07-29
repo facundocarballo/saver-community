@@ -61,6 +61,12 @@ const Contract = require('web3-eth-contract');
 
 Contract.setProvider(BSC_MAINNET_RPC);
 
+/*
+    Cuando se cambian los tokens hay que cambiar tambien algun contrato importante, como por ejemplo el Clock (poner el mismo contrato) para que el Router detecte los cambios.
+    Luego de eso, hacer un RefreshAll
+
+*/
+
 // Contract Address
 export const OWNERS_CONTRACT_ADDRESS = "0xF7Ca5aeb3d2DBC0012f153224e22a1757c8f83F5"; // Addresses Contract.
 export const CLOCK_CONTRACT_ADDRESS = "0xDF8109567Ca3f9b5Aca54ffB76e8a783142BcA45"; 

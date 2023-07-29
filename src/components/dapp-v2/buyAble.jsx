@@ -51,7 +51,7 @@ export const BuyAble = () => {
   // Methods
   const handleApprove = async () => {
     const amount_wei = web3.utils.toWei(
-      String(Number(amountToSpend) + 0.01),
+      String(Number(amountToSpend)),
       "ether"
     );
     const data = await StableCoin.contract.methods

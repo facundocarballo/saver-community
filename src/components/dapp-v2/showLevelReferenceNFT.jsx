@@ -330,7 +330,7 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
               </Text>
               {loading ? (
                 <Loading />
-              ) : true ? (
+              ) : showRecoverLevel() ? (
                 <Button variant="blueDapp" onClick={handleRecoverNFTsByLevel}>
                   Migrar NFTs
                 </Button>
