@@ -22,7 +22,7 @@ import {
   buildTransaciont,
   SINERGY_BRONZE_CONTRACT_ADDRESS,
   INITIAL_AMOUNT_NFTS,
-  MIGRATION_CONTRACT_ADDRESS
+  MIGRATION_SINERGY_BRONZE_CONTRACT_ADDRESS
 } from "../../web3/funcs";
 import { Loading } from "./loading";
 
@@ -224,7 +224,7 @@ export const ShowLevelReferenceNFT = ({ nft, level }) => {
     const data = await getCorrectDataOfRecoverNFTs();
     const params = await buildTransaciont(
       addressAccount,
-      MIGRATION_CONTRACT_ADDRESS,
+      MIGRATION_SINERGY_BRONZE_CONTRACT_ADDRESS,
       data
     );
 
